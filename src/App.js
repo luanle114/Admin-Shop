@@ -5,6 +5,8 @@ import ManageStaffPage from "./pages/StaffPage/index.jsx";
 import CustomerProfilePage from "./pages/CustomerPage/index.jsx";
 import OrdersPage from "./pages/OrderPage/index.jsx";
 import Sidebar from "./components/SideBar/index.jsx";
+import LoginPage from "./pages/LoginPage/index.jsx";
+import RegisterPage from "./pages/RegisterPage/index.jsx";
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
             <Route path="/manage-staff" element={<ManageStaffPage />} />
             <Route path="/customer-profile" element={<CustomerProfilePage />} />
             <Route path="/orders" element={<OrdersPage />} />
+            <Route path="/login" element={<LoginPage/>}/>
+            <Route path="/register" element={<RegisterPage/>}/>
           </Routes>
         </div>
       </div>
