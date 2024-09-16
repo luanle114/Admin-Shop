@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { TextField, Button, Box, Typography, Container, CssBaseline, Avatar } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useAuth } from '../../auth/AuthContext';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const theme = createTheme();
 
@@ -10,14 +12,21 @@ export default function Login() {
     email: '',
     password: '',
   })
-  const handleSubmit = () => {
-    fetch("https://bms-fs-api.azurewebsites.net/api/Auth/login", {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    })
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await login(data.email, data.password);
+      
+      // Redirect to the page they were trying to access or default to home
+      const from = location.state?.from?.pathname || '/';
+      navigate(from, { replace: true });
+    } catch (error) {
+      console.error('Login failed', error);
+      // Handle error (e.g., show an error message to the user)
+    }
   };
 
   const handleChange = (event) => {
