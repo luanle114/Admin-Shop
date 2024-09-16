@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { TextField, Button, Box, Typography, Container, CssBaseline, Avatar } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -6,14 +6,26 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 const theme = createTheme();
 
 export default function Login() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+  const [data, setData] = useState({
+    email: '',
+    password: '',
+  })
+  const handleSubmit = () => {
+    fetch("https://bms-fs-api.azurewebsites.net/api/Auth/login", {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
   };
+
+  const handleChange = (event) => {
+    setData({
+      ...data,
+      [event.target.name]: event.target.value
+    })
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -33,7 +45,7 @@ export default function Login() {
           <Typography component="h1" variant="h5">
             Sign In
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <Box sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
@@ -43,6 +55,7 @@ export default function Login() {
               name="email"
               autoComplete="email"
               autoFocus
+              onChange={e => handleChange(e)}
             />
             <TextField
               margin="normal"
@@ -53,12 +66,14 @@ export default function Login() {
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange={e => handleChange(e)}
             />
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              onClick={handleSubmit}
             >
               Sign In
             </Button>
